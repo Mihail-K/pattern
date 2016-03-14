@@ -5,11 +5,12 @@ import pattern.base;
 
 import std.meta;
 
-template selection(patterns...) if(allSatisfy!(isPattern, patterns))
+template selection(patterns...)
+    if(__traits(compiles, staticMap!(asPattern, patterns)))
 {
     enum selection = function string(string input)
     {
-        foreach(pattern; patterns)
+        foreach(pattern; staticMap!(asPattern, patterns))
         {
             string result = pattern(input);
             if(result !is null) return result;

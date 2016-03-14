@@ -3,11 +3,11 @@ module pattern.optionals;
 
 import pattern.base;
 
-template optional(alias pattern) if(isPattern!pattern)
+template optional(alias pattern) if(__traits(compiles, asPattern!pattern))
 {
     enum optional = function string(string input)
     {
-        string result = pattern(input);
+        string result = asPattern!pattern(input);
         return result ? result : "";
     };
 }

@@ -6,13 +6,14 @@ import pattern.base;
 import std.array;
 import std.meta;
 
-template sequence(patterns...) if(allSatisfy!(isPattern, patterns))
+template sequence(patterns...)
+    if(__traits(compiles, staticMap!(asPattern, patterns)))
 {
     enum sequence = function string(string input)
     {
         Appender!string buffer;
 
-        foreach(pattern; patterns)
+        foreach(pattern; staticMap!(asPattern, patterns))
         {
             string result = pattern(input);
             if(result is null) return null;

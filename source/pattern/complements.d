@@ -3,13 +3,13 @@ module pattern.complements;
 
 import pattern.base;
 
-template complement(alias pattern) if(isPattern!pattern)
+template complement(alias pattern) if(__traits(compiles, asPattern!pattern))
 {
     enum complement = function string(string input)
     {
         if(input.length)
         {
-            string result = pattern(input);
+            string result = asPattern!pattern(input);
             return result ? null : [ input[0] ];
         }
 
