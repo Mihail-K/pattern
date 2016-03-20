@@ -18,7 +18,8 @@ template repeat(alias pattern) if(__traits(compiles, asPattern!pattern))
             input   = input[result.length .. $];
         }
 
-        return buffer.data;
+        string output = buffer.data;
+        return output.length ? output : null;
     };
 }
 
@@ -37,7 +38,7 @@ unittest
 
     assert(r("aabbccdd") == "aabbcc");
     assert(r("acbadeac") == "acba");
-    assert(r("")         == "");
+    assert(r("dfeafsdc") is null);
 }
 
 unittest
