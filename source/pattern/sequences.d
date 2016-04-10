@@ -3,26 +3,24 @@ module pattern.sequences;
 
 import pattern.base;
 
-import std.array;
+import std.algorithm;
+import std.conv;
 import std.meta;
+import std.range;
+
+import core.exception;
 
 template sequence(patterns...)
     if(__traits(compiles, staticMap!(asPattern, patterns)))
 {
     enum sequence = function string(string input)
     {
-        Appender!string buffer;
+        auto result = staticMap!(asPattern, patterns).only
+            .map!(pattern => pattern(input))
+            .tee!(result  => input = input[result.length .. $])
+            .array;
 
-        foreach(pattern; staticMap!(asPattern, patterns))
-        {
-            string result = pattern(input);
-            if(result is null) return null;
-
-            buffer ~= result;
-            input   = input[result.length .. $];
-        }
-
-        return buffer.data;
+        return result.all ? result.joiner.text : null;
     };
 }
 

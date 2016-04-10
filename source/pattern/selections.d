@@ -3,20 +3,21 @@ module pattern.selections;
 
 import pattern.base;
 
+import std.algorithm;
 import std.meta;
+import std.range;
 
 template selection(patterns...)
     if(__traits(compiles, staticMap!(asPattern, patterns)))
 {
     enum selection = function string(string input)
     {
-        foreach(pattern; staticMap!(asPattern, patterns))
-        {
-            string result = pattern(input);
-            if(result !is null) return result;
-        }
-
-        return null;
+        return staticMap!(asPattern, patterns).only
+            .map!(pattern   => pattern(input))
+            .filter!(result => result !is null)
+            .chain(null.only)
+            .takeOne
+            .front;
     };
 }
 

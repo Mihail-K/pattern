@@ -1,19 +1,19 @@
 
 module pattern.primitives;
 
+import std.algorithm;
+import std.range;
+import std.string;
+
 template primitive(primitives...) if(primitives.length > 0)
 {
     enum primitive = function string(string input)
     {
-        foreach(primitive; primitives)
-        {
-            if(primitive.length <= input.length && primitive == input[0 .. primitive.length])
-            {
-                return primitive;
-            }
-        }
-
-        return null;
+        return primitives.only
+            .filter!(primitive => input.startsWith(primitive))
+            .chain(null.only)
+            .takeOne
+            .front;
     };
 }
 

@@ -3,23 +3,21 @@ module pattern.repeats;
 
 import pattern.base;
 
+import std.algorithm;
 import std.array;
+import std.conv;
+import std.range;
 
 template repeat(alias pattern) if(__traits(compiles, asPattern!pattern))
 {
     enum repeat = function string(string input)
     {
-        string result;
-        Appender!string buffer;
-
-        while((result = asPattern!pattern(input)).length)
-        {
-            buffer ~= result;
-            input   = input[result.length .. $];
-        }
-
-        string output = buffer.data;
-        return output.length ? output : null;
+        return std.range.repeat(0)
+            .map!(iterator => asPattern!pattern(input))
+            .tee!(result   => input = input[result.length .. $])
+            .until!(result => result is null)
+            .joiner
+            .text;
     };
 }
 
