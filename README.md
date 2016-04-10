@@ -1,4 +1,4 @@
-# Pattern
+# Pattern [![DUB](https://img.shields.io/dub/v/pattern.svg)](http://code.dlang.org/packages/pattern) [![DUB](https://img.shields.io/dub/l/pattern.svg)](http://code.dlang.org/packages/pattern)
 Templated types for string pattern matching and lexers.
 
 Pattern can be used to construct elaborate and complex pattern matchers that can operate at compile time (`std.regex` currently cannot), and are often faster than both `regex` and `ctRegex` matchers. Pattern was designed with lexers in mind.
